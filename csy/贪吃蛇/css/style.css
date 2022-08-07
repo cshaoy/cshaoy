@@ -1,0 +1,48 @@
+#container{
+    border: 1px solid black;
+    margin: auto;
+    width: 800px;
+    height: 800px;
+    position: relative;
+}
+.snakesize{
+    width: 25px;
+    height: 25px;
+    background: greenyellow;
+    /* display: inline-block; */
+    position: absolute;
+}
+.plane{
+    width: 800px;
+    height: 80px;
+    margin:  auto;
+    border: 1px solid black;
+    border-bottom: 0px;
+    /* box-sizing: border-box; */
+    margin-top: 100px;
+    position: relative;
+}
+#off{
+    width: 100px;
+    height: 28px;
+    line-height: 26px;
+    box-sizing: border-box;
+    transform: translateY(-50%);
+    position: absolute;
+    top: 50%;
+    
+}
+#planescore{
+    width: 250px;
+    height: 80px;
+    border: 1px solid;
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+    border-bottom: 0;
+    border-top: 0;
+    font-size: 40px;
+    line-height: 80px;
+}
