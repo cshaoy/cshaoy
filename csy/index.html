@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSY</title>
+</head>
+<style>
+    *{
+        padding: 0px;
+        margin: 0px;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+    }
+    .head{
+        width: 100vw;
+        height: 100px;
+        background-color:  #ccc7c73b;
+    }
+    .body{
+        width: 100vw;
+        height: calc(100% - 100px);
+        margin-top: 5px;
+        display: flex
+    }
+    .title{
+        margin: auto;
+
+    }
+    .title>h1{
+        text-align: center;
+        padding-top: 20px;
+    }
+    #body_left{
+        width: 200px;
+        height: 100%;
+    }
+    #body_right{
+        width: calc(100% - 200px);
+        height: 100%;
+    }
+    button{
+        width: 100px;
+        height: 50px;
+    }
+    .left_ul{
+        width: 100%;
+        padding-left: 20px;
+    }
+    .left_ul>li{
+        width: 100%;
+        height: 25px;
+
+    }
+    .left_ul>li:hover{
+        background-color: #ccc7c73b
+    }
+</style>
+
+<body>
+    <div class="head">
+        <div class="title">
+            <h1>CSY</h1>
+        </div>
+    </div>
+    <div class="body">
+        <dvi id="body_left">
+            <!-- <a href="五子棋/index.html">五子棋</a> -->
+           <ul class="left_ul">
+            <li id="btn1">五子棋</li>
+            <li id="btn2">贪吃蛇</li>
+           </ul>
+        </dvi>
+       
+        <div id="body_right">
+            <iframe id="iframe" src="" frameborder="0">
+
+            </iframe>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    let but=document.getElementById('btn1');
+    but.onclick=function(){
+         let iframe=document.getElementById('iframe');
+         console.log(iframe)
+         console.log(iframe.src)
+         iframe.src="五子棋/index.html"
+    }
+    let but2=document.getElementById('btn2');
+    but2.onclick=function(){
+         let iframe=document.getElementById('iframe');
+         console.log(iframe)
+         console.log(iframe.src)
+         iframe.src="贪吃蛇/index.html"
+    }
+    function open(num){
+        console.log(1)
+        // let iframe=document.getElementById('iframe');
+        // console.log(num)
+        // switch(num){
+        //     case 1:
+        //     console.log(iframe)
+            
+        //     ;break;
+        // }
+    }
+</script>
+</html>
