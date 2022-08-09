@@ -5,8 +5,17 @@ let time;
 let off = document.getElementById('off');
 let scoreinput = document.getElementById('score');
 let container = document.getElementById("container");
+let upbtn = document.getElementById('up');
+let leftbtn = document.getElementById('left');
+let bottombtn = document.getElementById('bottom');
+let rightbtn = document.getElementById('right');
 let isturn = false;
-
+let containerrect=container.getBoundingClientRect();
+console.log(containerrect)
+let width=containerrect.width;
+let height=containerrect.height;
+let topdis=containerrect.top;
+let left=containerrect.left;
 off.onclick = function () {
     let text = off.innerText;
     if (text == '继续游戏' || text == '开始游戏') {
@@ -67,7 +76,7 @@ function move() {
     let size2y = size2.offsetTop;
     let x, y
     if (direction == 'x') {
-        if (size2x + 25 >= 800) {
+        if (size2x + 25 >= width) {
             clearInterval(time);
             off.innerText = '重新开始';
             return;
@@ -86,7 +95,7 @@ function move() {
         y = size2y;
     }
     if (direction == 'y') {
-        if (size2y + 25 >= 800) {
+        if (size2y + 25 >= height) {
             clearInterval(time);
             off.innerText = '重新开始';
             return;
@@ -158,13 +167,44 @@ function onkeydown(event) {
             break;
     }
 }
+upbtn.onclick = function () {
+    if (direction != 'y') {
+        direction = '-y';
+        isturn = false
+    }
+}
+leftbtn.onclick = function () {
+    if (direction != 'x') {
+        direction = '-x';
+        isturn = false
+    }
+}
+bottombtn.onclick = function () {
+    if (direction != '-y') {
+        direction = 'y';
+        isturn = false
+    }
+}
+rightbtn.onclick = function () {
+    if (direction != '-x') {
+        direction = 'x';
+        isturn = false
+    }
+}
+
+
 
 function establifood() {
     let x, y;
-
+    let xitem=width/25/10;
+    let yitem=height/25/10;
+    console.log(xitem)
+    console.log(yitem)
     while (true) {
-        x = Math.ceil(Math.random() * 10 * 3.2) * 25;
-        y = Math.ceil(Math.random() * 10 * 3.2) * 25;
+        x = Math.ceil(Math.random() * 10 * xitem) * 25;
+        y = Math.ceil(Math.random() * 10 * yitem) * 25;
+        console.log(x)
+        console.log(y)
         let iscollision = collision(x, y);
         if (!iscollision) {
             break;
