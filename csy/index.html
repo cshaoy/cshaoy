@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,54 +8,64 @@
     <title>CSY</title>
 </head>
 <style>
-    *{
+    * {
         padding: 0px;
         margin: 0px;
         height: 100vh;
         width: 100vw;
         overflow: hidden;
     }
-    .head{
+
+    .head {
         width: 100vw;
         height: 100px;
-        background-color:  #ccc7c73b;
+        background-color: #ccc7c73b;
     }
-    .body{
+
+    .body {
         width: 100vw;
         height: calc(100% - 100px);
         margin-top: 5px;
         display: flex
     }
-    .title{
+
+    .title {
         margin: auto;
 
     }
-    .title>h1{
+
+    .title>h1 {
         text-align: center;
         padding-top: 20px;
     }
-    #body_left{
+
+    #body_left {
         width: 200px;
         height: 100%;
     }
-    #body_right{
+
+    #body_right {
         width: calc(100% - 200px);
         height: 100%;
     }
-    button{
+
+    button {
         width: 100px;
         height: 50px;
     }
-    .left_ul{
+
+    .left_ul {
         width: 100%;
         padding-left: 20px;
     }
-    .left_ul>li{
+
+    .left_ul>li {
         width: 100%;
         height: 25px;
 
     }
-    .left_ul>li:hover{
+
+    .left_ul>li:hover {
         background-color: #ccc7c73b
     }
 </style>
@@ -68,12 +79,12 @@
     <div class="body">
         <dvi id="body_left">
             <!-- <a href="五子棋/index.html">五子棋</a> -->
-           <ul class="left_ul">
-            <li id="btn1">五子棋</li>
-            <li id="btn2">贪吃蛇</li>
-           </ul>
+            <ul class="left_ul">
+                <li id="btn1">五子棋</li>
+                <li id="btn2">贪吃蛇</li>
+            </ul>
         </dvi>
-       
+
         <div id="body_right">
             <iframe id="iframe" src="" frameborder="0">
 
@@ -82,30 +93,52 @@
     </div>
 </body>
 <script type="text/javascript">
-    let but=document.getElementById('btn1');
-    but.onclick=function(){
-         let iframe=document.getElementById('iframe');
-         console.log(iframe)
-         console.log(iframe.src)
-         iframe.src="五子棋/index.html"
+    let phone = IsPhone()
+    console.log(phone)
+    function IsPhone() {
+        //获取浏览器navigator对象的userAgent属性（浏览器用于HTTP请求的用户代理头的值）
+        var info = navigator.userAgent;
+        //通过正则表达式的test方法判断是否包含“Mobile”字符串
+        var isPhone = /mobile/i.test(info);
+        //如果包含“Mobile”（是手机设备）则返回true
+        return isPhone;
     }
-    let but2=document.getElementById('btn2');
-    but2.onclick=function(){
-         let iframe=document.getElementById('iframe');
-         console.log(iframe)
-         console.log(iframe.src)
-         iframe.src="贪吃蛇/index.html"
+
+    let but = document.getElementById('btn1');
+    but.onclick = function () {
+        if (isPhone) {
+            window.location.href = '五子棋/index.html';
+        } else {
+            let iframe = document.getElementById('iframe');
+            console.log(iframe)
+            console.log(iframe.src)
+            iframe.src = "五子棋/index.html"
+        }
+
     }
-    function open(num){
+    let but2 = document.getElementById('btn2');
+    but2.onclick = function () {
+        if (isPhone) {
+            window.location.href = '贪吃蛇/index.html';
+        } else {
+            let iframe = document.getElementById('iframe');
+            console.log(iframe)
+            console.log(iframe.src)
+            iframe.src = "贪吃蛇/index.html"
+        }
+
+    }
+    function open(num) {
         console.log(1)
         // let iframe=document.getElementById('iframe');
         // console.log(num)
         // switch(num){
         //     case 1:
         //     console.log(iframe)
-            
+
         //     ;break;
         // }
     }
 </script>
+
 </html>
