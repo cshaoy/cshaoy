@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>indexDB</title>
+</head>
+
+<body>
+    <h1>indexDB</h1>
+    <div>
+        <label for="name">姓名</label><input name="name" id="name" type="text" value="">
+    </div>
+    <div>
+        <label for="age">年龄</label><input name="age" id="age" type="text" value="">
+    </div>
+    <div>
+        <label for="key">读取</label><input name="key" id="key" type="text" value="">
+    </div>
+    <div><button id="btnadd">保存</button></div>
+    <div><button id="btngetkey">读取</button></div>
+    <div><button id="btngetcursorGetData">读取</button></div>
+    <div><button id="btngetDataByIndex">读取</button></div>
+    <div><button id="btncursorGetDataByIndex">读取</button></div>
+    <div><button id="btnupdate">修改</button></div>
+
+    <div>
+        <label for="delkey">删除</label><input name="delkey" id="delkey" type="text" value="">
+    </div>
+    <div><button id="btndelkey">删除</button></div>
+</body>
+<script>
+    let db;
+    document.getElementById('btnadd').addEventListener("click", function () {
+        console.log(12)
+        let name = document.getElementById("name").value;
+        let age = document.getElementById("age").value;
+        console.log(db)
+        adddata(db, "Class1_sub", { name: name, age: age })
+    },)
+    document.getElementById('btngetkey').addEventListener("click", function () {
+        console.log(12)
+        // let key=document.getElementById("key").value;
+
+        getlistkey(db, "Class1_sub", Number(key)).then(function (list) {
+            console.log("key=0", list)
+
+        })
+    },)
+    document.getElementById('btngetcursorGetData').addEventListener("click", function () {
+
+
+        cursorGetData(db, "Class1_sub").then(function (list) {
+            console.log("key", list)
+
+        })
+    },)
+
+    document.getElementById('btngetDataByIndex').addEventListener("click", function () {
+        let name = document.getElementById("name").value;
+        let age = document.getElementById("age").value;
+
+        getDataByIndex(db, "Class1_sub", 'name', name).then(function (list) {
+            console.log("key", list)
+
+        })
+    },)
+
+    document.getElementById('btncursorGetDataByIndex').addEventListener("click", function () {
+        let name = document.getElementById("name").value;
+        let age = document.getElementById("age").value;
+
+        cursorGetDataByIndex(db, "Class1_sub", 'name', name).then(function (list) {
+            console.log("key", list)
+
+        })
+    },)
+
+    document.getElementById('btnupdate').addEventListener("click", function () {
+        let name = document.getElementById("name").value;
+        let age = document.getElementById("age").value;
+
+        update(db, "Class1_sub",  { name: 'name', age: 'age',id:1 })
+    },)
+
+    document.getElementById('btndelkey').addEventListener("click", function () {
+        let delkey = document.getElementById("delkey").value;
+        
+
+        delectrow(db, "Class1_sub",  Number(delkey))
+    },)
+
+
+
+    let resolve = Onopen("class1", 1).then(function (resolve, reject) {
+        db = resolve;
+        console.log(resolve)
+        console.log(reject)
+    })
+    console.log(resolve)
+    function Onopen(dataname, v) {
+        return new Promise((resolve, reject) => {
+            let indexedDB = window.indexedDB;
+            let db;
+            if (indexedDB) {
+
+                let request = indexedDB.open(dataname, 1);
+                request.onsuccess = function (event) {
+                    db = event.target.result;
+                    console.log("数据库打开成功")
+                    resolve(db)
+                }
+                request.onerror = function (event) {
+                    console.log("数据库打开失败")
+                    db = event.target.result;
+                    reject(db)
+                }
+                request.onupgradeneeded = function (event) {
+                    db = event.target.result; // 数据库对象
+                    var objectStore;
+                    // 创建存储库
+                    objectStore = db.createObjectStore("Class1_sub", {
+                        keyPath: "id", // 这是主键
+                        autoIncrement: true // 实现自增
+                    });
+                    // 创建索引，在后面查询数据的时候可以根据索引查
+                    objectStore.createIndex("id", "id", { unique: true });
+                    objectStore.createIndex("name", "name", { unique: false });
+                    objectStore.createIndex("age", "age", {
+                        unique: false,
+                    });
+                }
+            }
+        })
+
+    }
+    function adddata(db, name, data) {
+
+        let request = db.transaction([name], "readwrite").objectStore(name).add(data)
+        request.onsuccess = function () {
+            console.log("数据添加成功")
+        }
+        request.onerror = function () {
+            console.log("数据添加失败")
+        }
+
+    }
+    function getlistkey(db, name, key) {
+        return new Promise((resolve, reject) => {
+            let request = db.transaction([name]).objectStore(name).get(key);
+            request.onsuccess = function () {
+                console.log("数据读取成功")
+                console.log(request.result)
+                resolve(request.result)
+            }
+            request.onerror = function (error) {
+                console.log("数据读取失败")
+                reject(error)
+            }
+        })
+    }
+    function cursorGetData(db, name) {
+        return new Promise((resolve, reject) => {
+            let request = db.transaction([name]).objectStore(name).openCursor();
+            let list = []
+            request.onsuccess = function (e) {
+                let cursor = e.target.result;
+                console.log(cursor)
+                if (cursor) {
+                    list.push(cursor.value);
+                    cursor.continue();
+                } else {
+                    console.log("游标读取的数据：", list);
+                    resolve(list)
+                }
+            }
+        })
+    }
+    function getDataByIndex(db, name, indexname, value) {
+        return new Promise((resolve, reject) => {
+            let request = db.transaction([name]).objectStore(name).index(indexname).get(value);
+            request.onsuccess = function (e) {
+                let result = e.target.result;
+                resolve(result)
+            }
+        })
+    }
+    function cursorGetDataByIndex(db, name, indexname, value) {
+        return new Promise((resolve, reject) => {
+            let list = [];
+            let request = db.transaction([name]).objectStore(name).index(indexname).openCursor(IDBKeyRange.only(value));
+            request.onsuccess = function (e) {
+                console.log('sd',e)
+                let cursor = e.target.result;
+                console.log("scr",cursor)
+                if (cursor) {
+                    list.push(cursor.value);
+                    cursor.continue();
+                } else {
+                    console.log(list)
+                    resolve(list)
+                }
+            }
+            request.onerror=function(e){
+                console.log(e)
+                console.log("获取失败")
+            }
+        })
+
+    }
+
+    function update(db,name,data){
+        let request=db.transaction([name],'readwrite').objectStore(name).put(data);
+        request.onsuccess=function(e){
+            console.log("修改成功")
+        }
+        request.onerror=function(e){
+            console.log("修改失败")
+        }
+    }
+
+    function delectrow(db,name,key){
+        let request=db.transaction([name],"readwrite").objectStore(name).delete(key);
+        request.onsuccess=function(e){
+            console.log("删除成功")
+        }
+        request.onerror=function(e){
+            console.log("删除失败")
+        }
+    }
+
+</script>
+
+</html>
