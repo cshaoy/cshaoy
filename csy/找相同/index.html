@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        #container {
+            width: 500px;
+            height: 500px;
+            border: 1px solid;
+            margin: auto;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .row {
+            display: flex;
+            width: 100%;
+            border-bottom: 1px solid;
+            position: relative;
+        }
+       
+        .col {
+            height: inherit;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position-x: center;
+            transition: opacity 1s;
+            position: relative;
+        }
+        .border{
+            height: inherit;
+            position: absolute;
+            box-shadow: inset 1px 0px 0px 0px #888888;
+            width: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+
+    </div>
+    <script src="./fand-same.js"></script>
+</body>
+
+</html>
