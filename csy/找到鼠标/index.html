@@ -13,7 +13,7 @@
         }
 
         body {
-            cursor: none;
+
             overflow: hidden;
         }
 
@@ -28,6 +28,7 @@
         }
 
         #background {
+            cursor: none;
             background: #000000;
         }
     </style>
@@ -52,27 +53,31 @@
         x: 0,
         y: 0
     }
+
     const img_width = 30;
     const img_height = 30;
+    let conut=[];
+    let time = performance.now();
     let splee = 4;
     document.addEventListener('contextmenu', event => event.preventDefault());
     let canvas = document.getElementById('background');
     let ctx = canvas.getContext('2d');
-    console.log(ctx);
+
     let img = document.getElementById("img");
-    // let pat;
 
     img.onload = function () {
-        // let p = ctx.drawImage(img, 0, 0, 30, 30);
-        // pat = ctx.createPattern(img, "repeat");
- 
+        // conut=size.width/img_width
+        for (let index = 0; index < size.width/img_width; index++) {
+            conut.push({x:img_width*index,y:canvas.height*Math.random()});
+            
+        }
         animate()
+        drop()
     }
-    let body=document.getElementsByTagName('body')[0];
     document.addEventListener('mousemove', (event) => {
-        mouse.x=event.x;
-        mouse.y=event.y;
-        body.style.cursor='none'
+        mouse.x = event.x;
+        mouse.y = event.y;
+        canvas.style.cursor = 'none'
     })
     // 绑定鼠标离开事件的处理函数
     document.addEventListener('mouseout', function (event) {
@@ -94,73 +99,96 @@
         if (splee > 1) {
             alert('恭喜进入下一关！！！');
             splee--;
-            let x=Math.random()*size.width;
-            let y=Math.random()*size.height;
-            let ruat=but.getClientRects()[0];
-            console.log(ruat)
-            while (x<0||x>size.width-ruat.width) {
-                x=Math.random()*size.width;
+            let x = Math.random() * size.width;
+            let y = Math.random() * size.height;
+            let ruat = but.getClientRects()[0];
+            while (x < 0 || x > size.width - ruat.width) {
+                x = Math.random() * size.width;
             }
-            while (y<0||y>size.height-ruat.height-300) {
-                y=Math.random()*size.height;
+            while (y < 0 || y > size.height - ruat.height - 300) {
+                y = Math.random() * size.height;
             }
-            console.log(x,y)
-            console.log(size.width-ruat.width,size.height-ruat.height)
-            but.style.top=x+'px';
-            but.style.left=y+'px';
+            console.log(x, y)
+            console.log(size.width - ruat.width, size.height - ruat.height)
+            but.style.top = x + 'px';
+            but.style.left = y + 'px';
         } else {
             alert('恭喜通关了！！！');
         }
 
     })
 
-    function createmouse() {
+    function createmouse(date = 0) {
 
         // ctx.drawImage(img, mouse.x, mouse.y, img_width, img_height);
-        let l_x = mouse.x;
-        let r_x = mouse.x;
-        let t_y = mouse.y;
-        let b_y = mouse.y;
+        let l_x = mouse.x + date;
+        let r_x = mouse.x + date;
+        let t_y = mouse.y + date;
+        let b_y = mouse.y + date;
 
         let radius = Math.sqrt(Math.pow(mouse.x - centre.x, 2) + Math.pow(mouse.y - centre.y, 2))
         // ctx.arc(centre.x, centre.y, radius,)
 
 
-        while (l_x < size.width) {
+        while (l_x < size.width + img_width) {
             t_y = mouse.y;
-            while (t_y < size.height) {
+            while (t_y < size.height + img_height) {
                 ctx.drawImage(img, l_x, t_y, img_width, img_height);
                 t_y += img_height * splee;
             }
             b_y = mouse.y;
-            while (b_y > 0) {
+            while (b_y > -1 * img_height) {
                 ctx.drawImage(img, l_x, b_y, img_width, img_height);
                 b_y -= img_height * splee;
             }
             l_x += img_width * splee;
         }
-        while (r_x > 0) {
+        while (r_x > -1 * img_width) {
             t_y = mouse.y;
-            while (t_y < size.height) {
+            while (t_y < size.height + img_height) {
                 ctx.drawImage(img, r_x, t_y, img_width, img_height);
                 t_y += img_height * splee;
             }
             b_y = mouse.y;
-            while (b_y > 0) {
+            while (b_y > -1 * img_height) {
                 ctx.drawImage(img, r_x, b_y, img_width, img_height);
                 b_y -= img_height * splee;
             }
             r_x -= img_width * splee;
         }
     }
-    
+   
     function animate() {
-        
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         createmouse()
+        if (performance.now() - time > 100) {
+            time = performance.now()
+            for (let index = 0; index < conut.length; index++) {
+            const element = conut[index];
+            conut[index].y+=Math.random()*10;
+            if(conut[index].y>(canvas.height)/20*Math.random()){
+                conut[index].y=canvas.height*Math.random();
+            }
+        }
+        } 
+        drop()
+       
+
+
         requestAnimationFrame(animate);
     }
+    function drop() {
+        for (let index = 0; index < conut.length; index++) {
+            const element = conut[index];
+            ctx.drawImage(img, element.x, element.y, img_width, img_height);
+        }
 
+
+        // let time = Math.floor(size.height / 9.8) * 10;
+        // ctx.drawImage(img, x, y, img_width, img_height);
+
+
+    }
     onWindowResize()
     window.addEventListener('resize', onWindowResize);
     function onWindowResize() {
@@ -170,6 +198,10 @@
         size.height = window.innerHeight;
         centre.x = window.innerWidth / 2
         centre.y = window.innerHeight / 2
+        conut=[]
+        for (let index = 0; index < (size.width/img_width); index++) {
+            conut.push({x:img_width*index,y:canvas.height*Math.random()});
+        }
     }
 </script>
 
