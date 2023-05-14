@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>进入下一关</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            cursor: none;
+            overflow: hidden;
+        }
+
+        #upcustoms {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            color: #ffffff;
+            border: 1px solid;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        #background {
+            background: #000000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="upcustoms">进入下一关</div>
+    <canvas id="background" width="100vw" height="100vh"></canvas>
+    <img id="img" src="img/aero_arrow_xl.cur" alt="" style="display: none;" width='20px' height="20px">
+</body>
+<script>
+    let size = {
+        width: 100,
+        height: 100
+
+    }
+    const centre = {
+        x: 0,
+        y: 0
+    }
+    const mouse = {
+        x: 0,
+        y: 0
+    }
+    const img_width = 30;
+    const img_height = 30;
+    let splee = 4;
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    let canvas = document.getElementById('background');
+    let ctx = canvas.getContext('2d');
+    console.log(ctx);
+    let img = document.getElementById("img");
+    // let pat;
+
+    img.onload = function () {
+        // let p = ctx.drawImage(img, 0, 0, 30, 30);
+        // pat = ctx.createPattern(img, "repeat");
+ 
+        animate()
+    }
+    let body=document.getElementsByTagName('body')[0];
+    document.addEventListener('mousemove', (event) => {
+        mouse.x=event.x;
+        mouse.y=event.y;
+        body.style.cursor='none'
+    })
+    // 绑定鼠标离开事件的处理函数
+    document.addEventListener('mouseout', function (event) {
+        // 处理函数逻辑
+        console.log('离开事件')
+
+    });
+
+    // 绑定鼠标进入事件的处理函数
+    document.addEventListener('mouseover', function (event) {
+        // 处理函数逻辑
+        console.log('进入事件')
+    });
+
+
+
+    let but = document.getElementById('upcustoms');
+    but.addEventListener('mousedown', (event) => {
+        if (splee > 1) {
+            alert('恭喜进入下一关！！！');
+            splee--;
+            let x=Math.random()*size.width;
+            let y=Math.random()*size.height;
+            let ruat=but.getClientRects()[0];
+            console.log(ruat)
+            while (x<0||x>size.width-ruat.width) {
+                x=Math.random()*size.width;
+            }
+            while (y<0||y>size.height-ruat.height-300) {
+                y=Math.random()*size.height;
+            }
+            console.log(x,y)
+            console.log(size.width-ruat.width,size.height-ruat.height)
+            but.style.top=x+'px';
+            but.style.left=y+'px';
+        } else {
+            alert('恭喜通关了！！！');
+        }
+
+    })
+
+    function createmouse() {
+
+        // ctx.drawImage(img, mouse.x, mouse.y, img_width, img_height);
+        let l_x = mouse.x;
+        let r_x = mouse.x;
+        let t_y = mouse.y;
+        let b_y = mouse.y;
+
+        let radius = Math.sqrt(Math.pow(mouse.x - centre.x, 2) + Math.pow(mouse.y - centre.y, 2))
+        // ctx.arc(centre.x, centre.y, radius,)
+
+
+        while (l_x < size.width) {
+            t_y = mouse.y;
+            while (t_y < size.height) {
+                ctx.drawImage(img, l_x, t_y, img_width, img_height);
+                t_y += img_height * splee;
+            }
+            b_y = mouse.y;
+            while (b_y > 0) {
+                ctx.drawImage(img, l_x, b_y, img_width, img_height);
+                b_y -= img_height * splee;
+            }
+            l_x += img_width * splee;
+        }
+        while (r_x > 0) {
+            t_y = mouse.y;
+            while (t_y < size.height) {
+                ctx.drawImage(img, r_x, t_y, img_width, img_height);
+                t_y += img_height * splee;
+            }
+            b_y = mouse.y;
+            while (b_y > 0) {
+                ctx.drawImage(img, r_x, b_y, img_width, img_height);
+                b_y -= img_height * splee;
+            }
+            r_x -= img_width * splee;
+        }
+    }
+    
+    function animate() {
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        createmouse()
+        requestAnimationFrame(animate);
+    }
+
+    onWindowResize()
+    window.addEventListener('resize', onWindowResize);
+    function onWindowResize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        size.width = window.innerWidth;
+        size.height = window.innerHeight;
+        centre.x = window.innerWidth / 2
+        centre.y = window.innerHeight / 2
+    }
+</script>
+
+</html>
