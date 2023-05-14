@@ -7,12 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>进入下一关</title>
     <style>
+        html{
+            height: 100%;
+        }
         * {
             margin: 0px;
             padding: 0px;
         }
 
         body {
+            height: 100vh;
+            width: 100vw;
 
             overflow: hidden;
         }
@@ -25,11 +30,16 @@
             border: 1px solid;
             border-radius: 5px;
             padding: 10px;
+            cursor: none;
         }
 
         #background {
             cursor: none;
             background: #000000;
+        }
+        #img{
+            position: absolute;
+            top: 0;
         }
     </style>
 </head>
@@ -37,7 +47,7 @@
 <body>
     <div id="upcustoms">进入下一关</div>
     <canvas id="background" width="100vw" height="100vh"></canvas>
-    <img id="img" src="img/aero_arrow_xl.cur" alt="" style="display: none;" width='20px' height="20px">
+    <img id="img" src="img/aero_arrow_xl.cur" alt="" style="display: none;" width='20px' height="20px ">
 </body>
 <script>
     let size = {
@@ -102,16 +112,17 @@
             let x = Math.random() * size.width;
             let y = Math.random() * size.height;
             let ruat = but.getClientRects()[0];
+
             while (x < 0 || x > size.width - ruat.width) {
                 x = Math.random() * size.width;
             }
-            while (y < 0 || y > size.height - ruat.height - 300) {
+            while (y < 0 || y > size.height - ruat.height) {
                 y = Math.random() * size.height;
             }
-            console.log(x, y)
-            console.log(size.width - ruat.width, size.height - ruat.height)
-            but.style.top = x + 'px';
-            but.style.left = y + 'px';
+
+            but.style.top = y + 'px';
+            but.style.left = x + 'px';
+           
         } else {
             alert('恭喜通关了！！！');
         }
