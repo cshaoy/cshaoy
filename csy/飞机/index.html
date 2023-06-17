@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* #container {
+            width: 50vw;
+            height: 50vh;
+            position: relative;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%,50%);
+        }
+        #controlPlane{
+            width: 100%;
+            height: 150px;
+        }
+        #game {
+            border: 1px solid #ddd;
+            width: 800px;
+            height: 600px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #scorePlane {
+            width: 200px;
+            height: 50px;
+            border: 1px solid #ccc;
+            position: absolute;
+            left: 50%;
+            top: 20%;
+            transform: translate(-50%, -50%);
+            padding: 0.5em;
+        } */
+        /* #container {
+  margin: 0 auto;
+  width: 800px;
+  height: 600px;
+  position: relative;
+}
+
+#controlPlane {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+  background: #fff;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#startBtn {
+  background: #3D8EC7;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+#scorePlane {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#scorePlane label {
+  margin-right: 10px;
+}
+
+#game {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  height: calc(100% - 60px);
+} */
+
+
+        /* 默认样式 */
+        #container {
+            margin: 0 auto;
+            width: 800px;
+            height: 1000px;
+            position: relative;
+        }
+
+        #game {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            height: calc(100% - 100px);
+        }
+
+        #controlPlane {
+            position: absolute;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #startBtn {
+            background: #3D8EC7;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        #scorePlane {
+
+            z-index: 1;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #scorePlane label {
+            margin-right: 10px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            #container {
+                width: 100%;
+                height: 100%;
+            }
+
+            #game {
+                position: relative;
+                top: 0;
+                left: 0;
+                border: none;
+                border-radius: 0;
+                width: 100%;
+                height: auto;
+            }
+
+            #controlPlane {
+                position: static;
+                background: none;
+                padding: 0;
+                margin-bottom: 20px;
+            }
+
+            #startBtn {
+                background: #3D8EC7;
+                color: #fff;
+                padding: 10px;
+                border: none;
+                border-radius: 0;
+                cursor: pointer;
+                width: 100%;
+                font-size: 20px;
+                margin-bottom: 0;
+            }
+
+            #scorePlane {
+                position: static;
+                background: none;
+                padding: 0;
+                margin-bottom: 20px;
+            }
+
+            #scorePlane label {
+                margin-right: 5px;
+                font-size: 20px;
+                font-weight: normal;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="controlPlane"><button id="startBtn">开始</button>
+            <div id="scorePlane"><label>得分</label><span id="score"></span></div>
+        </div><canvas id="game" width="800" height="600"></canvas>
+    </div>
+</body>
+<script>
+    let startBtn = document.querySelector('#startBtn');
+    startBtn.addEventListener('click', startplay)
+    window.addEventListener('resize', onWindowResize);
+
+    let canvas = document.querySelector('#game');
+    console.log(canvas)
+    let ctx = canvas.getContext('2d');
+    console.log(ctx)
+    const size = {
+        rightX: canvas.width,
+        bottomY: canvas.height,
+    }
+    const obstacle_size = {
+        width: 50,
+        height: 200
+    }
+    let game_state;
+    let id = 0;
+    let objects = [];
+    let player = {
+        type: 'player', id: 0, x: 10, y: 290, width: 20, height: 20
+    };
+    let score = 0;
+    let ismove = false;
+    let Time = new Date().getTime();
+    onWindowResize()
+    function drawobstacle(x, y, width, height) {
+
+        ctx.fillStyle='#00ff00'
+        ctx.fillRect(x, y, width, height);
+    }
+    function drawPlayer() {
+        if (!ismove && player.y + player.height < size.bottomY) {
+            player.y += 5;
+        }
+        let width = player.width;
+        let height = player.height;
+        let y = player.y;
+        let x = player.x;
+        ctx.fillStyle='#ff00ff'
+        ctx.fillRect(x, y, width, height,'#ff00ff');
+        ismove = false;
+    }
+    function draw(object) {
+        switch (object.type) {
+            case 'obstacle':
+                drawobstacle(object.x, object.y, object.width, object.height);
+                break;
+
+            default:
+                break;
+        }
+    }
+    function moveRect() {
+        ismove = true;
+        if (player.y > 50) {
+            player.y -= 50;
+        }
+
+    }
+
+    function startplay() {
+        game_state = true;
+        ctx.clearRect(0, 0, size.rightX, size.bottomY);
+        player.x = 10;
+        player.y = 290;
+        objects = [];
+        id = 0;
+        score = 0;
+    }
+
+    document.addEventListener('keyup', event => {
+        const keyCode = event.keyCode;
+        if (keyCode === 37) { // 按下左箭头
+            moveRect(-10, 0, 0);
+        } else if (keyCode === 38) { // 按下上箭头
+            moveRect();
+        } else if (keyCode === 39) { // 按下右箭头
+            moveRect(10, 0, 0);
+        } else if (keyCode === 40) { // 按下下箭头
+            moveRect(0, 10, 0);
+        }
+    });
+    function animation() {
+        requestAnimationFrame(animation);
+        if (new Date().getTime() - Time > 17) {
+            let date = new Date().getTime() - Time
+            Time = new Date().getTime();
+            render(date);
+        }
+
+    }
+    animation()
+    let score_dom = document.getElementById('score');
+    let id_ing;
+    function render(date) {
+        if (game_state) {
+            ctx.clearRect(0, 0, size.rightX, size.bottomY);
+            let removes = [];
+            for (let index = 0; index < objects.length; index++) {
+                if (objects[index].type == 'obstacle') {
+
+                    objects[index].x -= 3;
+                    if (objects[index].x < -objects[index].width) {
+                        removes.push(objects[index].id);
+                    }
+                    if (player.x+player.width >= objects[index].x && player.x < objects[index].x+objects[index].width) {
+                        if (objects[index].y == 0) {
+                            if (player.y < objects[index].height) {
+                                console.log("sd")
+                                game_state = false;
+                            }
+                        } else {
+                            if (player.y + player.height > objects[index].y) {
+                                console.log(player)
+                                console.log(objects[index])
+                                game_state = false;
+                                console.log("sd")
+                            }
+                        }
+                        if(id_ing){
+                            if(id_ing!=objects[index].id){
+                                id_ing=objects[index].id;
+                                score += 10;
+                            }
+                        }else{
+                            id_ing=objects[index].id;
+                        }
+                        
+                        score_dom.innerText = score;
+                    }
+
+                }
+                draw(objects[index]);
+            }
+            console.log(player.y)
+            drawPlayer()
+
+            if (objects.length > 0) {
+                if (objects[objects.length - 1].x + objects[objects.length - 1].width < size.rightX) {
+                    addobstacle()
+                }
+
+            } else {
+                addobstacle()
+            }
+            for (let index = removes.length - 1; index >= 0; index--) {
+                objects.splice(objects.findIndex(t => t.id == removes[index]), 1);
+            }
+        }
+
+        if (id > 1000) {
+            id = 0;
+        }
+
+
+    }
+    function addobstacle() {
+        let width = obstacle_size.width;
+        let height1 = obstacle_size.height;
+        let height2 = obstacle_size.height;
+        width += Math.random() * 100;
+        let h1 = Math.random() * 200;
+        let h2 = Math.random() * 200;
+        let empty_height = Math.random() * 200;
+        while ((h1 + h2 + height1 * 2) > size.bottomY-100 - empty_height) {
+            h1 = Math.random() * 200;
+            h2 = Math.random() * 200;
+
+        }
+        height1 += h1;
+        height2 += h2;
+        let x = size.rightX + width;
+        let y1 = 0;
+        let y2 = size.bottomY - height2;
+        id++;
+        objects.push({ type: 'obstacle', id: id, x: x, y: y1, width: width, height: height1 });
+        drawobstacle(x, y1, width, height1)
+        id++;
+        objects.push({ type: 'obstacle', id: id, x: x, y: y2, width: width, height: height2 });
+        drawobstacle(x, y2, width, height2)
+    }
+    function onWindowResize() {
+        window.innerHeight;
+        window.innerWidth;
+        console.log(canvas.getClientRects());
+        let rects = canvas.getClientRects()[0];
+        canvas.width = rects.width;
+        canvas.height = rects.height;
+        size.rightX = canvas.width;
+        size.bottomY = canvas.height;
+
+    }
+</script>
+
+
+</html>

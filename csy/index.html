@@ -84,6 +84,7 @@
                 <li id="btn2">贪吃蛇</li>
                 <li><a href="找相同/index.html">找相同</a></li>
                 <li><a href="找到鼠标/index.html">找到鼠标</a></li>
+                <li><a href="飞机/index.html">飞机</a></li>
             </ul>
         </dvi>
 
@@ -108,7 +109,7 @@
 
     let but = document.getElementById('btn1');
     but.onclick = function () {
-        if (isPhone) {
+        if (phone) {
             window.location.href = '五子棋/index.html';
         } else {
             let iframe = document.getElementById('iframe');
@@ -120,7 +121,7 @@
     }
     let but2 = document.getElementById('btn2');
     but2.onclick = function () {
-        if (isPhone) {
+        if (phone) {
             window.location.href = '贪吃蛇/index.html';
         } else {
             let iframe = document.getElementById('iframe');
